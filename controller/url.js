@@ -9,14 +9,20 @@ async function handGenerateNewShortURL(req, res) {
         return res.status(400).json({ error: "url is required" });
     }
 
+    let redirectURL = body.url;
+    if (!redirectURL.startsWith("http://") && !redirectURL.startsWith("https://")) {
+        redirectURL = "https://" + redirectURL;
+    }
+
     await URL.create({
         shortId: shortID,
-        redirectURL: body.url,
+        redirectURL: redirectURL,
         visitHistory: [],
     });
 
     return res.json({ id: shortID });
 }
+
 
 async function getAll(req, res) {
     const allUrl = await URL.find({});
